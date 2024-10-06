@@ -1,6 +1,6 @@
 // EditUserPopup.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { z } from 'zod';
 import { RESOURCE_URL } from '../constant/Apis';
@@ -31,11 +31,11 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const CreateUser: React.FC<CreateDataAttribute> = ({ trigger, setTrigger }) => {
-    const { users, addUser } = useUsersContext();
+    const { addUser } = useUsersContext();
     const userCreatedSuccessfully = () => {
         toast("User Created Successfully!", {
             autoClose: 2000, // Adjust as needed
-            onClose: () => setTrigger(false),
+            onClose: () => setTrigger(!trigger),
         });
 
     };

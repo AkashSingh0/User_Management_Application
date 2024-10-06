@@ -7,7 +7,6 @@ import { RESOURCE_URL } from '../constant/Apis';
 import { useUsersContext } from '../utils/UserContext';
 import CreateUser from './CreateUser';
 
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export interface UserAttribute {

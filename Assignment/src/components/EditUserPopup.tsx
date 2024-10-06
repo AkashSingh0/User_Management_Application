@@ -1,5 +1,3 @@
-// EditUserPopup.js
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { z } from 'zod';
@@ -28,7 +26,7 @@ type FormData = z.infer<typeof formSchema>;
 const EditUserPopup: React.FC<EditableAttribute> = ({ id, trigger, setTrigger }) => {
     const [user, setUser] = useState<UserAttribute | null>(null);
     const [formData, setFormData] = useState<FormData | null>(null);
-    const {updateUser} = useUsersContext();
+    const { updateUser } = useUsersContext();
     async function fetchUser() {
         try {
             const response = await axios.get(`${RESOURCE_URL}/${id}`);
@@ -53,7 +51,7 @@ const EditUserPopup: React.FC<EditableAttribute> = ({ id, trigger, setTrigger })
         try {
             // Validate the form data using Zod
             const validatedData = formSchema.parse(formData);
-            const newObj:typeof user = {
+            const newObj: typeof user = {
                 id: user?.id as number,
                 name: validatedData.name as string,
                 address: {
@@ -63,93 +61,130 @@ const EditUserPopup: React.FC<EditableAttribute> = ({ id, trigger, setTrigger })
                 company: {
                     name: validatedData.name,
                     catchPhrase: '',
-                    bs:''
+                    bs: ''
                 },
                 email: validatedData.email,
                 phone: validatedData.phone,
-                
-            } 
+
+            }
             await axios.put(`${RESOURCE_URL}/${id}`, validatedData);
             updateUser(id, newObj)
             setTrigger(false); // Close modal after update
         } catch (error) {
             console.error(error);
-            alert('Failed to update user data');  
-            setTrigger(false); 
-      }
+            alert('Failed to update user data');
+            setTrigger(false);
+        }
     }
 
     if (!trigger) return null; // Do not render if not triggered
 
     return (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center px-5">
-            <div className="bg-white p-5 rounded-lg shadow-lg">
-                <h2 className="text-2xl mb-4">Edit User</h2>
-                <input
-                    type="text"
-                    value={formData?.name || ''}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Name"
-                    className="border rounded p-2 mb-2 w-full"
-                />
+            <form onSubmit={handleUpdate}>
+                <div className="bg-white p-5 rounded-lg shadow-lg">
+                    <h2 className="text-2xl mb-4">Edit User</h2>
+                    <input
+                        type="text"
+                        value={formData?.name || ''}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData!, // Non-null assertion to bypass the TypeScript check
+                                name: e.target.value
+                            })
+                        }
 
-                <input
-                    type="email"
-                    value={formData?.email || ''}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="Email"
-                    className="border rounded p-2 mb-2 w-full"
-                />
+                        placeholder="Name"
+                        className="border rounded p-2 mb-2 w-full"
+                    />
+                    <input
+                        type="email"
+                        value={formData?.email || ''}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData!, // Non-null assertion to bypass the TypeScript check
+                                email: e.target.value
+                            })
+                        }
 
-                <input
-                    type="text"
-                    value={user?.address.street + ', '+user?.address.city || ''}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="Address"
-                    readOnly
-                    className="border rounded p-2 mb-2 w-full"
-                />
+                        placeholder="Email"
+                        className="border rounded p-2 mb-2 w-full"
+                    />
 
-                <input
-                    type="text"
-                    value={formData?.companyName || 'N/A'}
-                    onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                    placeholder="CompanyName"
-                    className="border rounded p-2 mb-2 w-full"
-                />
+                    <input
+                        type="text"
+                        value={user?.address.street + ', ' + user?.address.city || ''}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData!, // Non-null assertion to bypass the TypeScript check
+                                address: e.target.value
+                            })
+                        }
 
-                <input
-                    type="text"
-                    value={formData?.website || ''}
-                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                    placeholder="Website"
-                    className="border rounded p-2 mb-2 w-full"
-                />
+                        placeholder="Address"
+                        readOnly
+                        className="border rounded p-2 mb-2 w-full"
+                    />
 
-                <input
-                    type="text"
-                    value={'USER-'+formData?.username || ''}
-                    readOnly
-                    placeholder="Username"
-                    className="border rounded p-2 mb-2 w-full"
-                />
+                    <input
+                        type="text"
+                        value={formData?.companyName || 'N/A'}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData!, // Non-null assertion to bypass the TypeScript check
+                                companyName: e.target.value
+                            })
+                        }
+
+                        placeholder="CompanyName"
+                        className="border rounded p-2 mb-2 w-full"
+                    />
+
+                    <input
+                        type="text"
+                        value={formData?.website || ''}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData!, // Non-null assertion to bypass the TypeScript check
+                                website: e.target.value
+                            })
+                        }
+
+                        placeholder="Website"
+                        className="border rounded p-2 mb-2 w-full"
+                    />
+
+                    <input
+                        type="text"
+                        value={'USER-' + formData?.username || ''}
+                        readOnly
+                        placeholder="Username"
+                        className="border rounded p-2 mb-2 w-full"
+                    />
 
 
-                <input
-                    type="text"
-                    value={formData?.phone || ''}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="Phone"
-                    className="border rounded p-2 mb-2 w-full"
-                />
-                {/* Add additional fields here */}
-                <button className="bg-slate-900 text-white p-2 rounded" onClick={handleUpdate}>
-                    Update
-                </button>
-                <button className="bg-red-800 text-white p-2 rounded ml-2" onClick={() => setTrigger(false)}>
-                    Cancel
-                </button>
-            </div>
+                    <input
+                        type="text"
+                        value={formData?.phone || ''}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData!, // Non-null assertion to bypass the TypeScript check
+                                phone: e.target.value
+                            })
+                        }
+
+                        placeholder="Phone"
+                        className="border rounded p-2 mb-2 w-full"
+                    />
+                    {/* Add additional fields here */}
+                    <button className="bg-slate-900 text-white p-2 rounded">
+                        Update
+                    </button>
+                    <button className="bg-red-800 text-white p-2 rounded ml-2" onClick={() => setTrigger(false)}>
+                        Cancel
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };
