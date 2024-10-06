@@ -15,7 +15,7 @@ const DeleteUserPopup: React.FC<DeleteAttribute> = ({id, trigger, setTrigger}) =
     try {
       await axios.delete(RESOURCE_URL+`/${id}`);
       deleteUser(id);
-      setTrigger(false)
+      setTrigger(!trigger)
     } catch (error) {
       console.log(error);
     }  
